@@ -1,0 +1,106 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PyScript Example</title>
+
+  <!-- PyScript CSS and JS -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2023.05.1/pyscript.css" />
+  <script defer src="https://pyscript.net/releases/2023.05.1/pyscript.js"></script>
+
+
+  <!-- Bootstrap and Plotly -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.plot.ly/plotly-3.0.0.min.js"></script>
+
+
+  <!-- PyScript Config -->
+  <py-config>
+    packages = [
+      "pyudunits2[xml]",
+      "numpy"
+    ]
+
+    [[fetch]]
+    from = "./"
+    files = ["test_unit.py"]
+
+    [splashscreen]
+    autoclose = true
+
+    [[runtimes]]
+    src = "https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js"
+    name = "pyodide-0.22.0"
+    lang = "python"
+  </py-config>
+
+<body>
+    <div class="jumbotron">
+        <h1>Unit conversion tool </h1>
+        <p class="lead">
+            Using pyudunits2 to covert units.
+        </p>
+    </div>
+
+<!-- Row 1: Input Unit + Value Input + Convert Button -->
+<div class="row">
+        <div class="col-sm-2 p-2 ml-4 mb-1">
+            <button type="button" class="btn btn-secondary">Select input units from list:</button>
+        </div>
+    <div class="col-sm-3 p-2">
+        <select class="form-control" id="input_unit">
+            <option value="meter">Meter</option>
+            <option value="kilometer">Kilometer</option>
+            <option value="foot">Foot</option>
+            <option value="mile">Mile</option>
+        </select>
+    </div>
+    <div class="col-sm-3 p-2">
+        <input type="number" class="form-control" id="input_value" placeholder="Enter number">
+    </div>
+    <div class="col-sm-2 p-2">
+        <button class="btn btn-primary" py-click="convert_value()">Convert</button>
+    </div>
+</div>
+
+<!-- Row 2: Output Unit + Result Display -->
+<div class="row">
+        <div class="col-sm-2 p-2 ml-4 mb-1">
+            <button type="button" class="btn btn-secondary">Select output units from list:</button>
+        </div>
+    <div class="col-sm-3 p-2">
+        <select class="form-control" id="output_unit">
+            <option value="m">Meter</option>
+            <option value="km">Kilometer</option>
+            <option value="ft">Foot</option>
+            <option value="mile">Mile</option>
+        </select>
+    </div>
+    <div class="col-sm-5 p-2">
+        <p id="result" class="mb-0 font-italic">Result will appear here</p>
+        <p id="equation" class="text-muted mt-1 font-italic">Equation will appear here</p>
+    </div>
+</div>
+
+<py-script>
+from test_unit import run_conversion
+
+def convert_value():
+    # Get values from HTML
+    input_val = Element("input_value").element.value
+    input_unit = Element("input_unit").element.value
+    output_unit = Element("output_unit").element.value
+
+    try:
+        # Call your real conversion function
+        converted, expression = run_conversion( input_unit, output_unit,input_val)
+
+        # Display result
+        Element("result").element.innerText = f"{input_val} {input_unit} = {converted} {output_unit}"
+        Element("equation").element.innerText = f"{expression}"
+    except Exception as e:
+        Element("result").element.innerText = f"Error: {e}"
+        Element("equation").element.innerText = ""
+</py-script>
+
+
+</html>
