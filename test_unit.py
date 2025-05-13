@@ -9,7 +9,7 @@ def run_conversion(input_unit, output_unit, val):
     output_val = converter.convert(float(val))
     return output_val, converter.expression
 
-def convert_value():
+def convert_value(event=None):
     input_val = float(document.getElementById("input_value").value)
     input_unit = document.getElementById("input_unit").value
     output_unit = document.getElementById("output_unit").value
